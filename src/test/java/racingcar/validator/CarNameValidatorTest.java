@@ -2,6 +2,9 @@ package racingcar.validator;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CarNameValidatorTest {
@@ -47,5 +50,19 @@ public class CarNameValidatorTest {
     void 자동차_이름_양옆에_공백은_제거(){
         String input = "   ab de    ";
         assertDoesNotThrow(() -> carNameValidator.validateLength(input));
+    }
+
+    @Test
+    void 자동차_이름이_중복_되면_예외(){
+        List<String> names = Arrays.asList("a", "b", "a");
+        assertThrows(IllegalArgumentException.class, () -> {
+            carNameValidator.validateDuplicate(names);
+        });
+    }
+
+    @Test
+    void 자동차_이름이_중복_없으면_성공(){
+        List<String> names = Arrays.asList("a", "b", "c");
+        assertDoesNotThrow(() -> carNameValidator.validateDuplicate(names));
     }
 }
