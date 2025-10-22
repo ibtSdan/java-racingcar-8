@@ -9,7 +9,8 @@ public class CarNameValidator {
     }
 
     public void validateLength(String input){
-        if (input.length() > 5){
+        String cleanedInput = input.trim();
+        if (cleanedInput.length() > 5){
             throw new IllegalArgumentException("자동차 이름은 5글자를 초과할 수 없습니다.");
         }
     }

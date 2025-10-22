@@ -42,4 +42,10 @@ public class CarNameValidatorTest {
         String input = "abcde";
         assertDoesNotThrow(() -> carNameValidator.validateLength(input));
     }
+
+    @Test
+    void 자동차_이름_양옆에_공백은_제거(){
+        String input = "   ab de    ";
+        assertDoesNotThrow(() -> carNameValidator.validateLength(input));
+    }
 }
