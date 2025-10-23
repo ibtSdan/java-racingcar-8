@@ -31,20 +31,33 @@ public class RacingCarController {
         String tryCountInput = view.getTryCountInput();
         BigInteger tryCount = createTryCountFromInput(tryCountInput);
 
-        System.out.println("\n실행 결과");
+        view.printResult();
 
         for (int i=0; i<tryCount.intValue(); i++) {
             moveAllCars(cars);
             view.printRoundResult(cars);
         }
 
-        // 최종 결과 출력
+        List<String> winners = getWinners(cars);
+        view.printWinners(winners);
     }
 
     private void moveAllCars(List<Car> cars){
         for (Car car : cars){
             car.move();
         }
+    }
+
+    private List<String> getWinners(List<Car> cars){
+        int maxPosition = cars.stream()
+                .mapToInt(Car::getPosition)
+                .max()
+                .orElse(0);
+
+        return cars.stream()
+                .filter(car -> car.getPosition() >= maxPosition)
+                .map(Car::getName)
+                .collect(Collectors.toList());
     }
 
     public List<Car> createCarsFromInput(String carInput){
