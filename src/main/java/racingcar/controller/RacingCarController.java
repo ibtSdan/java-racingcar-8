@@ -61,20 +61,17 @@ public class RacingCarController {
                 .orElse(0);
 
         return cars.stream()
-                .filter(car -> car.getPosition() >= maxPosition)
+                .filter(car -> car.getPosition() == maxPosition)
                 .map(Car::getName)
                 .collect(Collectors.toList());
     }
 
     public List<Car> createCarsFromInput(String carInput){
-        validateNotEmptyCarNames(carInput);
-        List<String> carNames = carSplit(carInput);
-        validateCarAll(carNames);
-        return createCars(carNames);
-    }
-
-    private void validateNotEmptyCarNames(String carInput){
         carNameValidator.validateNotEmpty(carInput);
+        List<String> carNames = carSplit(carInput);
+        carNames.forEach(carNameValidator::validateLength);
+        carNameValidator.validateDuplicate(carNames);
+        return factory.createCars(carNames);
     }
 
     private List<String> carSplit(String carInput){
@@ -83,26 +80,9 @@ public class RacingCarController {
                 .collect(Collectors.toList());
     }
 
-    private void validateCarAll(List<String> carNames){
-        carNames.forEach(carNameValidator::validateLength);
-        carNameValidator.validateDuplicate(carNames);
-    }
-
-    private List<Car> createCars(List<String> carNames){
-        return factory.createCars(carNames);
-    }
-
     public BigInteger createTryCountFromInput(String tryCountInput){
-        validateNotEmptyTryCount(tryCountInput);
-        validateNonNegative(tryCountInput);
-        return new BigInteger(tryCountInput);
-    }
-
-    private void validateNotEmptyTryCount(String tryCountInput){
         tryCountValidator.validateNotEmpty(tryCountInput);
-    }
-
-    private void validateNonNegative(String tryCountInput){
         tryCountValidator.validateNonNegative(tryCountInput);
+        return new BigInteger(tryCountInput);
     }
 }
