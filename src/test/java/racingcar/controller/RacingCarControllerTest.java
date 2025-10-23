@@ -37,14 +37,10 @@ public class RacingCarControllerTest {
     @Test
     void 자동차_반복_누적_획인(){
         List<Car> cars = List.of(new Car("a"), new Car("b"));
-
         MoveStrategy alwaysMove = () -> true;
         BigInteger tryCount = new BigInteger("5");
 
-        for (int i=0; i<tryCount.intValue(); i++) {
-            controller.moveAllCars(cars, alwaysMove);
-            view.printRoundResult(cars);
-        }
+        controller.playRound(cars, tryCount, alwaysMove);
 
         assertThat(cars.get(0).getPosition()).isEqualTo(5);
         assertThat(cars.get(1).getPosition()).isEqualTo(5);

@@ -35,17 +35,20 @@ public class RacingCarController {
 
         view.printResult();
         MoveStrategy moveStrategy = new RandomMoveStrategy();
-
-        for (int i=0; i<tryCount.intValue(); i++) {
-            moveAllCars(cars, moveStrategy);
-            view.printRoundResult(cars);
-        }
+        playRound(cars, tryCount, moveStrategy);
 
         List<String> winners = getWinners(cars);
         view.printWinners(winners);
     }
 
-    public void moveAllCars(List<Car> cars, MoveStrategy moveStrategy){
+    public void playRound(List<Car> cars, BigInteger tryCount, MoveStrategy moveStrategy){
+        for (int i=0; i<tryCount.intValue(); i++) {
+            moveAllCars(cars, moveStrategy);
+            view.printRoundResult(cars);
+        }
+    }
+
+    private void moveAllCars(List<Car> cars, MoveStrategy moveStrategy){
         for (Car car : cars){
             car.move(moveStrategy);
         }
