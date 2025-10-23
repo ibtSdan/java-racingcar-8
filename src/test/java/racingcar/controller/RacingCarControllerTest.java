@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import racingcar.domain.Car;
 import racingcar.factory.CarFactory;
 import racingcar.input.InputProvider;
+import racingcar.strategy.MoveStrategy;
 import racingcar.validator.CarNameValidator;
 import racingcar.validator.TryCountValidator;
 import racingcar.view.RacingCarView;
@@ -20,62 +21,50 @@ public class RacingCarControllerTest {
     CarNameValidator validator;
     CarFactory factory;
     TryCountValidator tryCountValidator;
+    InputProvider provider = () -> "";
+    RacingCarView view;
+    RacingCarController controller;
 
     @BeforeEach
     void setUp(){
         validator = new CarNameValidator();
         factory = new CarFactory();
         tryCountValidator = new TryCountValidator();
+        view = new RacingCarView(provider);
+        controller = new RacingCarController(factory,validator,tryCountValidator,view);
     }
 
     @Test
-    void 자동차_리스트_생성_성공(){
-        InputProvider provider1 = () -> "a,b,c";
-        RacingCarView view = new RacingCarView(provider1);
-        RacingCarController controller1 = new RacingCarController(factory,validator,tryCountValidator,view);
+    void 자동차_반복_누적_획인(){
+        List<Car> cars = List.of(new Car("a"), new Car("b"));
 
-        List<Car> cars = controller1.createCarsFromInput(provider1.getInput());
+        MoveStrategy alwaysMove = () -> true;
+        BigInteger tryCount = new BigInteger("5");
 
-        assertThat(cars).hasSize(3);
-        assertThat(cars.get(0).getName()).isEqualTo("a");
-        assertThat(cars.get(1).getName()).isEqualTo("b");
-        assertThat(cars.get(2).getName()).isEqualTo("c");
+        for (int i=0; i<tryCount.intValue(); i++) {
+            controller.moveAllCars(cars, alwaysMove);
+            view.printRoundResult(cars);
+        }
+
+        assertThat(cars.get(0).getPosition()).isEqualTo(5);
+        assertThat(cars.get(1).getPosition()).isEqualTo(5);
     }
 
     @Test
-    void 자동차_리스트_생성_예외(){
-        InputProvider provider2 = () -> "abcdef,abc";
-        RacingCarView view = new RacingCarView(provider2);
-        RacingCarController controller2 = new RacingCarController(factory,validator,tryCountValidator,view);
+    void 우승자_출력_확인(){
+        List<Car> cars = List.of(new Car("a"), new Car("b"), new Car("c"));
 
-        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            controller2.createCarsFromInput(provider2.getInput());
-        });
+        MoveStrategy alwaysMove = () -> true;
+        cars.get(0).move(alwaysMove);
+        cars.get(0).move(alwaysMove);
+        cars.get(1).move(alwaysMove);
+        cars.get(1).move(alwaysMove);
+        cars.get(2).move(alwaysMove);
 
-        assertThat(exception.getMessage()).isEqualTo("자동차 이름은 5글자를 초과할 수 없습니다.");
-    }
+        List<String> result = controller.getWinners(cars);
 
-    @Test
-    void 시도할_횟수_생성_성공(){
-        InputProvider provider3 = () -> "3";
-        RacingCarView view = new RacingCarView(provider3);
-        RacingCarController controller3 = new RacingCarController(factory,validator,tryCountValidator,view);
-
-        BigInteger number = controller3.createTryCountFromInput(provider3.getInput());
-
-        assertThat(number).isEqualTo(3);
-    }
-
-    @Test
-    void 시도할_횟수_생성_예외(){
-        InputProvider provider4 = () -> "-3";
-        RacingCarView view = new RacingCarView(provider4);
-        RacingCarController controller4 = new RacingCarController(factory,validator,tryCountValidator,view);
-
-        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            controller4.createTryCountFromInput(provider4.getInput());
-        });
-
-        assertThat(exception.getMessage()).isEqualTo("입력은 0 또는 양수만 가능합니다.");
+        assertThat(result).hasSize(2);
+        assertThat(result.get(0)).isEqualTo("a");
+        assertThat(result.get(1)).isEqualTo("b");
     }
 }

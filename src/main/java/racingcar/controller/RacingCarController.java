@@ -45,13 +45,13 @@ public class RacingCarController {
         view.printWinners(winners);
     }
 
-    private void moveAllCars(List<Car> cars, MoveStrategy moveStrategy){
+    public void moveAllCars(List<Car> cars, MoveStrategy moveStrategy){
         for (Car car : cars){
             car.move(moveStrategy);
         }
     }
 
-    private List<String> getWinners(List<Car> cars){
+    public List<String> getWinners(List<Car> cars){
         int maxPosition = cars.stream()
                 .mapToInt(Car::getPosition)
                 .max()
