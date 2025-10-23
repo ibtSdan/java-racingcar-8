@@ -1,6 +1,6 @@
 package racingcar.domain;
 
-import camp.nextstep.edu.missionutils.Randoms;
+import racingcar.strategy.MoveStrategy;
 
 public class Car {
     private final String name;
@@ -11,10 +11,8 @@ public class Car {
         this.position = 0;
     }
 
-
-    public void move(){
-        int randomValue = Randoms.pickNumberInRange(0, 9);
-        if (randomValue>=4){
+    public void move(MoveStrategy moveStrategy){
+        if (moveStrategy.movable()){
             position++;
         }
     }

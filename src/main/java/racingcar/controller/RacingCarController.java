@@ -3,6 +3,8 @@ package racingcar.controller;
 import racingcar.domain.Car;
 import racingcar.factory.CarFactory;
 import racingcar.input.InputProvider;
+import racingcar.strategy.MoveStrategy;
+import racingcar.strategy.RandomMoveStrategy;
 import racingcar.validator.CarNameValidator;
 import racingcar.validator.TryCountValidator;
 import racingcar.view.RacingCarView;
@@ -32,9 +34,10 @@ public class RacingCarController {
         BigInteger tryCount = createTryCountFromInput(tryCountInput);
 
         view.printResult();
+        MoveStrategy moveStrategy = new RandomMoveStrategy();
 
         for (int i=0; i<tryCount.intValue(); i++) {
-            moveAllCars(cars);
+            moveAllCars(cars, moveStrategy);
             view.printRoundResult(cars);
         }
 
@@ -42,9 +45,9 @@ public class RacingCarController {
         view.printWinners(winners);
     }
 
-    private void moveAllCars(List<Car> cars){
+    private void moveAllCars(List<Car> cars, MoveStrategy moveStrategy){
         for (Car car : cars){
-            car.move();
+            car.move(moveStrategy);
         }
     }
 
