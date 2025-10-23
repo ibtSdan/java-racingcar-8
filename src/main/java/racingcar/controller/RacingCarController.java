@@ -5,7 +5,9 @@ import racingcar.factory.CarFactory;
 import racingcar.input.InputHandler;
 import racingcar.input.InputProvider;
 import racingcar.validator.CarNameValidator;
+import racingcar.validator.TryCountValidator;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,16 +16,20 @@ public class RacingCarController {
     private final CarFactory factory;
     private final CarNameValidator validator;
     private final InputProvider provider;
+    private final TryCountValidator tryCountValidator;
 
-    public RacingCarController(CarFactory factory, CarNameValidator validator, InputProvider provider) {
+    public RacingCarController(CarFactory factory, CarNameValidator validator, InputProvider provider, TryCountValidator tryCountValidator) {
         this.factory = factory;
         this.validator = validator;
         this.provider = provider;
+        this.tryCountValidator = tryCountValidator;
     }
 
     public void run(){
         String carInput = provider.getInput();
         List<Car> cars = createCarsFromInput(carInput);
+        String tryCountInput = provider.getInput();
+        BigInteger tryCount = createTryCountFromInput(tryCountInput);
     }
 
     public List<Car> createCarsFromInput(String input){
@@ -50,5 +56,19 @@ public class RacingCarController {
 
     private List<Car> createCars(List<String> names){
         return factory.createCars(names);
+    }
+
+    public BigInteger createTryCountFromInput(String input){
+        validateNotEmptyTryCount(input);
+        validateNonNegative(input);
+        return new BigInteger(input);
+    }
+
+    private void validateNotEmptyTryCount(String input){
+        tryCountValidator.validateNotEmpty(input);
+    }
+
+    private void validateNonNegative(String input){
+        tryCountValidator.validateNonNegative(input);
     }
 }
