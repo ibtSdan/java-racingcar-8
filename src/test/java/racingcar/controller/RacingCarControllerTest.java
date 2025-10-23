@@ -9,6 +9,7 @@ import racingcar.factory.CarFactory;
 import racingcar.input.InputProvider;
 import racingcar.validator.CarNameValidator;
 import racingcar.validator.TryCountValidator;
+import racingcar.view.RacingCarView;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -30,7 +31,8 @@ public class RacingCarControllerTest {
     @Test
     void 자동차_리스트_생성_성공(){
         InputProvider provider1 = () -> "a,b,c";
-        RacingCarController controller1 = new RacingCarController(factory,validator,provider1,tryCountValidator);
+        RacingCarView view = new RacingCarView(provider1);
+        RacingCarController controller1 = new RacingCarController(factory,validator,tryCountValidator,view);
 
         List<Car> cars = controller1.createCarsFromInput(provider1.getInput());
 
@@ -43,7 +45,8 @@ public class RacingCarControllerTest {
     @Test
     void 자동차_리스트_생성_예외(){
         InputProvider provider2 = () -> "abcdef,abc";
-        RacingCarController controller2 = new RacingCarController(factory,validator,provider2, tryCountValidator);
+        RacingCarView view = new RacingCarView(provider2);
+        RacingCarController controller2 = new RacingCarController(factory,validator,tryCountValidator,view);
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
             controller2.createCarsFromInput(provider2.getInput());
@@ -55,7 +58,8 @@ public class RacingCarControllerTest {
     @Test
     void 시도할_횟수_생성_성공(){
         InputProvider provider3 = () -> "3";
-        RacingCarController controller3 = new RacingCarController(factory, validator, provider3, tryCountValidator);
+        RacingCarView view = new RacingCarView(provider3);
+        RacingCarController controller3 = new RacingCarController(factory,validator,tryCountValidator,view);
 
         BigInteger number = controller3.createTryCountFromInput(provider3.getInput());
 
@@ -65,7 +69,9 @@ public class RacingCarControllerTest {
     @Test
     void 시도할_횟수_생성_예외(){
         InputProvider provider4 = () -> "-3";
-        RacingCarController controller4 = new RacingCarController(factory, validator, provider4, tryCountValidator);
+        RacingCarView view = new RacingCarView(provider4);
+        RacingCarController controller4 = new RacingCarController(factory,validator,tryCountValidator,view);
+
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
             controller4.createTryCountFromInput(provider4.getInput());
         });

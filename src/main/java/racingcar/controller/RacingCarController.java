@@ -5,6 +5,7 @@ import racingcar.factory.CarFactory;
 import racingcar.input.InputProvider;
 import racingcar.validator.CarNameValidator;
 import racingcar.validator.TryCountValidator;
+import racingcar.view.RacingCarView;
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -14,20 +15,20 @@ import java.util.stream.Collectors;
 public class RacingCarController {
     private final CarFactory factory;
     private final CarNameValidator carNameValidator;
-    private final InputProvider provider;
     private final TryCountValidator tryCountValidator;
+    private final RacingCarView view;
 
-    public RacingCarController(CarFactory factory, CarNameValidator carNameValidator, InputProvider provider, TryCountValidator tryCountValidator) {
+    public RacingCarController(CarFactory factory, CarNameValidator carNameValidator, TryCountValidator tryCountValidator, RacingCarView view) {
         this.factory = factory;
         this.carNameValidator = carNameValidator;
-        this.provider = provider;
         this.tryCountValidator = tryCountValidator;
+        this.view = view;
     }
 
     public void run(){
-        String carInput = provider.getInput();
+        String carInput = view.getCarNamesInput();
         List<Car> cars = createCarsFromInput(carInput);
-        String tryCountInput = provider.getInput();
+        String tryCountInput = view.getTryCountInput();
         BigInteger tryCount = createTryCountFromInput(tryCountInput);
     }
 
