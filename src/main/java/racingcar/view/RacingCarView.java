@@ -1,6 +1,9 @@
 package racingcar.view;
 
+import racingcar.domain.Car;
 import racingcar.input.InputProvider;
+
+import java.util.List;
 
 public class RacingCarView {
     private final InputProvider provider;
@@ -17,5 +20,11 @@ public class RacingCarView {
     public String getTryCountInput(){
         System.out.println("시도할 횟수는 몇 회인가요?");
         return provider.getInput();
+    }
+
+    public void printRoundResult(List<Car> cars){
+        for (Car car : cars){
+            System.out.println(car.getName()+" : "+"-".repeat(car.getPosition()));
+        }
     }
 }

@@ -30,6 +30,21 @@ public class RacingCarController {
         List<Car> cars = createCarsFromInput(carInput);
         String tryCountInput = view.getTryCountInput();
         BigInteger tryCount = createTryCountFromInput(tryCountInput);
+
+        System.out.println("\n실행 결과");
+
+        for (int i=0; i<tryCount.intValue(); i++) {
+            moveAllCars(cars);
+            view.printRoundResult(cars);
+        }
+
+        // 최종 결과 출력
+    }
+
+    private void moveAllCars(List<Car> cars){
+        for (Car car : cars){
+            car.move();
+        }
     }
 
     public List<Car> createCarsFromInput(String carInput){
