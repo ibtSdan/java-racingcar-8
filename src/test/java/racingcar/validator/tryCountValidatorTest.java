@@ -29,4 +29,32 @@ public class tryCountValidatorTest {
             validator.validateNotEmpty(number);
         });
     }
+
+    @Test
+    void 시도할_횟수가_숫자가_아니면_예외(){
+        String number = "a";
+        assertThrows(IllegalArgumentException.class, () -> {
+            validator.validateNonNegative(number);
+        });
+    }
+
+    @Test
+    void 시도할_횟수가_음수면_예외(){
+        String number = "-1";
+        assertThrows(IllegalArgumentException.class, () -> {
+            validator.validateNonNegative(number);
+        });
+    }
+
+    @Test
+    void 시도할_횟수가_0이면_성공(){
+        String number = "0";
+        assertDoesNotThrow(() -> validator.validateNonNegative(number));
+    }
+
+    @Test
+    void 시도할_횟수가_양수면_성공(){
+        String number = "3";
+        assertDoesNotThrow(() -> validator.validateNonNegative(number));
+    }
 }
