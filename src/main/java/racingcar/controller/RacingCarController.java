@@ -2,7 +2,6 @@ package racingcar.controller;
 
 import racingcar.domain.Car;
 import racingcar.factory.CarFactory;
-import racingcar.input.InputHandler;
 import racingcar.input.InputProvider;
 import racingcar.validator.CarNameValidator;
 import racingcar.validator.TryCountValidator;
@@ -14,13 +13,13 @@ import java.util.stream.Collectors;
 
 public class RacingCarController {
     private final CarFactory factory;
-    private final CarNameValidator validator;
+    private final CarNameValidator carNameValidator;
     private final InputProvider provider;
     private final TryCountValidator tryCountValidator;
 
-    public RacingCarController(CarFactory factory, CarNameValidator validator, InputProvider provider, TryCountValidator tryCountValidator) {
+    public RacingCarController(CarFactory factory, CarNameValidator carNameValidator, InputProvider provider, TryCountValidator tryCountValidator) {
         this.factory = factory;
-        this.validator = validator;
+        this.carNameValidator = carNameValidator;
         this.provider = provider;
         this.tryCountValidator = tryCountValidator;
     }
@@ -32,43 +31,43 @@ public class RacingCarController {
         BigInteger tryCount = createTryCountFromInput(tryCountInput);
     }
 
-    public List<Car> createCarsFromInput(String input){
-        validateNotEmpty(input);
-        List<String> names = split(input);
-        validateAll(names);
-        return createCars(names);
+    public List<Car> createCarsFromInput(String carInput){
+        validateNotEmptyCarNames(carInput);
+        List<String> carNames = carSplit(carInput);
+        validateCarAll(carNames);
+        return createCars(carNames);
     }
 
-    private void validateNotEmpty(String input){
-        validator.validateNotEmpty(input);
+    private void validateNotEmptyCarNames(String carInput){
+        carNameValidator.validateNotEmpty(carInput);
     }
 
-    private List<String> split(String input){
-        return Arrays.stream(input.split(","))
+    private List<String> carSplit(String carInput){
+        return Arrays.stream(carInput.split(","))
                 .map(String::trim)
                 .collect(Collectors.toList());
     }
 
-    private void validateAll(List<String> names){
-        names.forEach(validator::validateLength);
-        validator.validateDuplicate(names);
+    private void validateCarAll(List<String> carNames){
+        carNames.forEach(carNameValidator::validateLength);
+        carNameValidator.validateDuplicate(carNames);
     }
 
-    private List<Car> createCars(List<String> names){
-        return factory.createCars(names);
+    private List<Car> createCars(List<String> carNames){
+        return factory.createCars(carNames);
     }
 
-    public BigInteger createTryCountFromInput(String input){
-        validateNotEmptyTryCount(input);
-        validateNonNegative(input);
-        return new BigInteger(input);
+    public BigInteger createTryCountFromInput(String tryCountInput){
+        validateNotEmptyTryCount(tryCountInput);
+        validateNonNegative(tryCountInput);
+        return new BigInteger(tryCountInput);
     }
 
-    private void validateNotEmptyTryCount(String input){
-        tryCountValidator.validateNotEmpty(input);
+    private void validateNotEmptyTryCount(String tryCountInput){
+        tryCountValidator.validateNotEmpty(tryCountInput);
     }
 
-    private void validateNonNegative(String input){
-        tryCountValidator.validateNonNegative(input);
+    private void validateNonNegative(String tryCountInput){
+        tryCountValidator.validateNonNegative(tryCountInput);
     }
 }
