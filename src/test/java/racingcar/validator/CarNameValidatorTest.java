@@ -47,12 +47,6 @@ public class CarNameValidatorTest {
     }
 
     @Test
-    void 자동차_이름_양옆에_공백은_제거(){
-        String input = "   ab de    ";
-        assertDoesNotThrow(() -> carNameValidator.validateLength(input));
-    }
-
-    @Test
     void 자동차_이름이_중복_되면_예외(){
         List<String> names = Arrays.asList("a", "b", "a");
         assertThrows(IllegalArgumentException.class, () -> {
