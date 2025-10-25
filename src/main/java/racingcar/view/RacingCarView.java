@@ -2,6 +2,7 @@ package racingcar.view;
 
 import racingcar.domain.Car;
 import racingcar.input.InputProvider;
+import racingcar.message.OutputMessage;
 
 import java.util.List;
 
@@ -13,17 +14,17 @@ public class RacingCarView {
     }
 
     public String getCarNamesInput(){
-        System.out.println("경주할 자동차 이름을 입력하세요.(이름은 쉼표(,) 기준으로 구분)");
+        System.out.println(OutputMessage.ASK_CAR_NAMES);
         return provider.getInput();
     }
 
     public String getTryCountInput(){
-        System.out.println("시도할 횟수는 몇 회인가요?");
+        System.out.println(OutputMessage.ASK_TRY_COUNT);
         return provider.getInput();
     }
 
     public void printResult(){
-        System.out.println("실행 결과");
+        System.out.println(OutputMessage.RESULT_TITLE);
     }
 
     public void printRoundResult(List<Car> cars){
@@ -34,6 +35,6 @@ public class RacingCarView {
     }
 
     public void printWinners(List<String> winners){
-        System.out.println("최종 우승자 : "+String.join(", ", winners));
+        System.out.println(OutputMessage.FINAL_WINNER+String.join(", ", winners));
     }
 }
